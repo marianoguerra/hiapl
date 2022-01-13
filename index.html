@@ -1,0 +1,100 @@
+<!doctype html>
+<html>
+<head>
+ <meta charset=utf-8>
+ <meta name=viewport content="width=device-width,minimum-scale=1.0,initial-scale=1,maximum-scale=1.0,user-scalable=no">
+ <title>HTML is a Programming Language</title>
+ <style>body{background-color:black;color:white}</style>
+</head>
+<body>
+  <template id=fizzbuzz1>
+    <div>
+     <do range 1 15></do>
+     <do set nums></do>
+     <for i in $nums>
+      <do push $i></do>
+      <do push 3></do>
+      <do rem></do>
+      <do push 0></do>
+      <do eq></do>
+      <do set isMod3></do>
+      <nb>i = <v $i></v> i % 3 == 0? <v $isMod3></v></nb>
+
+      <do push $i></do>
+      <do push 4></do>
+      <do rem></do>
+      <do push 0></do>
+      <do eq></do>
+      <do set isMod4></do>
+      <nb>i = <v $i></v> i % 4 == 0? <v $isMod4></v></nb>
+
+      <do push $isMod3></do>
+      <do push $isMod4></do>
+      <do and></do>
+      <do set isMod3AndMod4></do>
+      <nb>i = <v $i></v> i % 3 == 0 and i % 4 == 0? <v $isMod3AndMod4></v></nb>
+
+      <cond>
+          <if $isMod3AndMod4><p>FizzBuzz</p></if>
+
+          <if $isMod3><p>Fizz</p></if>
+
+          <if $isMod4><p>Buzz</p></if>
+
+          <else><p><v $i></v></p></else>
+      </cond>
+     </for>
+    </div>
+  </template>
+
+  <template id=fizzbuzz2>
+    <div>
+      <defn calc-is-mod i n>
+        <do push $i></do>
+        <do push $n></do>
+        <do rem></do>
+        <do push 0></do>
+        <do eq></do>
+      </defn>
+
+      <defn fizzbuzz from to>
+        <do range $from $to></do>
+        <do set nums></do>
+        <for i in $nums>
+          <do calc-is-mod $i 3></do>
+          <do set isMod3></do>
+          <nb>i = <v $i></v> i % 3 == 0? <v $isMod3></v></nb>
+
+          <do calc-is-mod $i 4></do>
+          <do set isMod4></do>
+          <nb>i = <v $i></v> i % 4 == 0? <v $isMod4></v></nb>
+
+          <do push $isMod3></do>
+          <do push $isMod4></do>
+          <do and></do>
+          <do set isMod3AndMod4></do>
+          <nb>i = <v $i></v> i % 3 == 0 and i % 4 == 0? <v $isMod3AndMod4></v></nb>
+
+          <cond>
+            <if $isMod3AndMod4><p>FizzBuzz</p></if>
+
+            <if $isMod3><p>Fizz</p></if>
+
+            <if $isMod4><p>Buzz</p></if>
+
+            <else><p><v $i></v></p></else>
+          </cond>
+        </for>
+      </defn>
+
+      <do fizzbuzz 1 21></do>
+      <do pop></do>
+    </div>
+  </template>
+  <script src="js/app.js"></script>
+  <script>
+    //evalFromTo(document.querySelector('#fizzbuzz1'), document.body);
+    evalFromTo(document.querySelector('#fizzbuzz2'), document.body);
+  </script>
+</body>
+</html>

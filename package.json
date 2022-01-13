@@ -1,0 +1,19 @@
+{
+  "name": "hiapl",
+  "version": "0.0.1",
+  "description": "HTML is a programming language",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mariano Guerra",
+  "license": "MIt",
+  "devDependencies": {
+    "eslint": "^8.6.0",
+    "prettier": "^2.5.1"
+  }
+}
