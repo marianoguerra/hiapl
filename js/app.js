@@ -25,7 +25,7 @@ class ValueNode extends ANode {
   }
 }
 
-class CommentNode extends ANode {
+class InfoNode extends ANode {
   constructor(body) {
     super();
     this.body = body;
@@ -41,6 +41,21 @@ class CommentNode extends ANode {
       this.body.map((child) => child.evalToValue(env))
     );
     return null;
+  }
+}
+
+class CommentNode extends ANode {
+  constructor(body) {
+    super();
+    this.body = body;
+  }
+
+  evalToValue(_env) {
+    return null;
+  }
+
+  eval(_env) {
+    return document.createComment(this.body);
   }
 }
 
@@ -229,6 +244,8 @@ class DomNode extends ANode {
 ANode.fromDOM = function (node) {
   if (node instanceof Text) {
     return new ValueNode(new Str(node.textContent));
+  } else if (node instanceof Comment) {
+    return new CommentNode(node.textContent);
   }
 
   const {childNodes, attributes, tagName} = node,
@@ -239,7 +256,6 @@ ANode.fromDOM = function (node) {
   for (let i = 0; i < childNodes.length; i++) {
     childs[i] = ANode.fromDOM(childNodes[i]);
   }
-  console.log('fromDOM', node, childs);
 
   switch (tagName) {
     case 'V':
@@ -259,7 +275,7 @@ ANode.fromDOM = function (node) {
     case 'DO':
       return new CallNode(order[0], order.slice(1), childs);
     case 'NB':
-      return new CommentNode(childs);
+      return new InfoNode(childs);
     default:
       return new DomNode(tagName, attributes, childs);
   }
@@ -444,12 +460,20 @@ class Env {
     return defVal;
   }
 
+  _setNativeFn0(name, fn) {
+    this.setFn(name, new NativeFn(0, fn));
+  }
+
+  _setNativeFn1(name, fn) {
+    this.setFn(name, new NativeFn(1, fn));
+  }
+
   _setNativeFn2(name, fn) {
     this.setFn(name, new NativeFn(2, fn));
   }
 
-  _setNativeFn0(name, fn) {
-    this.setFn(name, new NativeFn(0, fn));
+  _setNativeFn3(name, fn) {
+    this.setFn(name, new NativeFn(3, fn));
   }
 
   _bindPrelude() {
@@ -477,6 +501,47 @@ class Env {
       return null;
     });
 
+    this._setNativeFn1('query-selector-id', (env, [sel]) => {
+      const node = document.querySelector('#' + sel);
+      env.push(node);
+      return null;
+    });
+
+    this._setNativeFn3(
+      'add-event-listener-id',
+      (env, [sel, evName, fnName]) => {
+        const node = document.querySelector('#' + sel);
+        node.addEventListener(evName, (e) =>
+          env.lookupFn(fnName).eval(env, [e])
+        );
+        return null;
+      }
+    );
+
+    this._setNativeFn2('get-attribute', (env, [node, name]) => {
+      const val = node.getAttribute(name);
+      env.push(val);
+      return null;
+    });
+
+    this._setNativeFn3('set-attribute', (_env, [node, name, value]) => {
+      node.setAttribute(name, value);
+      return null;
+    });
+
+    this._setNativeFn1('parse-int', (env, [v]) => {
+      env.push(parseInt(v, 10));
+      return null;
+    });
+
+    this._setNativeFn0('inc', (env, _args) => {
+      env.push(env.pop() + 1);
+      return null;
+    });
+    this._setNativeFn0('dec', (env, _args) => {
+      env.push(env.pop() - 1);
+      return null;
+    });
     this._setNativeFn2('add', (env, _args, a, b) => {
       env.push(a + b);
       return null;
@@ -590,7 +655,9 @@ class NativeFn {
 
 function evalTo(anode, target) {
   const dom = anode.eval(new Env(null)._bindPrelude());
-  target.appendChild(dom);
+  if (dom instanceof Node) {
+    target.appendChild(dom);
+  }
   return dom;
 }
 
@@ -600,7 +667,6 @@ window.evalStringToTarget = function (s, targetNode) {
 };
 
 window.evalFromTo = function (templateNode, targetNode) {
-  console.log(templateNode.content.cloneNode(true));
   const anode = ANode.fromDOM(
     templateNode.content.firstElementChild.cloneNode(true)
   );

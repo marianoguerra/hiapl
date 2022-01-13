@@ -91,9 +91,46 @@
       <do pop></do>
     </div>
   </template>
+
+  <template id=counterapp>
+    <div>
+      <defn on-dec-click e>
+       <do on-btn-click e dec></do>
+      </defn>
+
+      <defn on-inc-click e>
+       <do on-btn-click e inc></do>
+      </defn>
+
+      <defn on-btn-click e op>
+        <do query-selector-id counter></do>
+        <do set input></do>
+
+        <do get-attribute $input value></do>
+        <do set cur-count-raw></do>
+
+        <do parse-int $cur-count-raw></do>
+        <!-- higher order functions :P -->
+        <do $op></do>
+        <do set new-count></do>
+
+        <do set-attribute $input value $new-count></do>
+      </defn>
+
+      <do add-event-listener-id dec click on-dec-click></do>
+      <do add-event-listener-id inc click on-inc-click></do>
+    </div>
+  </template>
+
+  <button id=dec>-</button>
+  <input type=number readonly id=counter value=0>
+  <button id=inc>+</button>
+
   <script src="js/app.js"></script>
   <script>
     //evalFromTo(document.querySelector('#fizzbuzz1'), document.body);
+    //evalFromTo(document.querySelector('#fizzbuzz2'), document.body);
+    evalFromTo(document.querySelector('#counterapp'), document.body);
     evalFromTo(document.querySelector('#fizzbuzz2'), document.body);
   </script>
 </body>
