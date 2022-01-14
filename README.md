@@ -161,7 +161,7 @@ A [comment](https://dictionary.cambridge.org/dictionary/english/nb) whose body i
 
 ## Examples
 
-### Simple Fibonacci
+### Simple Fizzbuzz
 
 ```html
 <do range 1 15></do>
@@ -201,7 +201,7 @@ A [comment](https://dictionary.cambridge.org/dictionary/english/nb) whose body i
 </for>
 ```
 
-### Fibonacci with Functions
+### Fizzbuzz with Functions
 
 ```html
 <defn calc-is-mod i n>

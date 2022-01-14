@@ -4,9 +4,43 @@
  <meta charset=utf-8>
  <meta name=viewport content="width=device-width,minimum-scale=1.0,initial-scale=1,maximum-scale=1.0,user-scalable=no">
  <title>HTML is a Programming Language</title>
- <style>body{background-color:black;color:white}</style>
+ <style>body{padding:2em;font-family:monospace;background-color:#f0f0f0;color:#222222}</style>
 </head>
 <body>
+  <p>Read the Source or read the description here: <a href="https://github.com/marianoguerra/hiapl">github.com/marianoguerra/hiapl</a></p>
+
+  <template id=overview>
+    <div>
+      <let s=hello n=4 b=true v=$s>
+        <p>String: <v $s></v></p>
+        <p>Number: <v $n></v></p>
+        <p>Boolean: <v $b></v></p>
+        <p>Variable: <v $v></v></p>
+
+        <nb>
+          String: <v $s></v>
+          Number: <v $n></v>
+          Boolean: <v $b></v>
+          Variable: <v $v></v>
+        </nb>
+
+        <do push $n></do>
+        <do push 3></do>
+        <do rem></do>
+        <do push 0></do>
+        <do eq></do>
+        <do set isMod3></do>
+        <nb>i = <v $n></v> n % 3 == 0? <v $isMod3></v></nb>
+
+        <do range 1 $n></do>
+        <do set nums></do>
+        <for i in $nums>
+          <p>i: <v $i></v></p>
+        </for>
+      </let>
+    </div>
+  </template>
+
   <template id=fizzbuzz1>
     <div>
      <do range 1 15></do>
@@ -126,12 +160,23 @@
   <input type=number readonly id=counter value=0>
   <button id=inc>+</button>
 
+  <div id=counterout></div>
+
+  <div id=overviewout>
+    <h2>Overview Output</h2>
+  </div>
+
+  <div id=fizzbuzz2out>
+    <h2>Fizzbuzz 2 Output</h2>
+  </div>
+
   <script src="js/app.js"></script>
   <script>
     //evalFromTo(document.querySelector('#fizzbuzz1'), document.body);
     //evalFromTo(document.querySelector('#fizzbuzz2'), document.body);
-    evalFromTo(document.querySelector('#counterapp'), document.body);
-    evalFromTo(document.querySelector('#fizzbuzz2'), document.body);
+    evalFromTo(document.querySelector('#counterapp'), document.querySelector('#counterout'));
+    evalFromTo(document.querySelector('#overview'), document.querySelector('#overviewout'));
+    evalFromTo(document.querySelector('#fizzbuzz2'), document.querySelector('#fizzbuzz2out'));
   </script>
 </body>
 </html>
